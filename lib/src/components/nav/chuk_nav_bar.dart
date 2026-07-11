@@ -167,8 +167,8 @@ class ChukNavBar extends StatelessWidget {
     Widget bar = t.isLight
         ? ChukGlass(
             shape: SquircleBorder(radius: s.radius ?? t.radii.pill),
-            fill: trackColor.withValues(alpha: 0.42),
-            blurSigma: 26,
+            fill: trackColor.withValues(alpha: 0.30),
+            blurSigma: 30,
             shadow: s.shadow,
             child: AnimatedSize(
               duration: t.motion.medium,

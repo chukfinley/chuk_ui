@@ -14,9 +14,9 @@ class ChukGlass extends StatelessWidget {
     super.key,
     required this.shape,
     required this.child,
-    this.fill = const Color(0x40FFFFFF),
-    this.highlight = const Color(0x66FFFFFF),
-    this.blurSigma = 26,
+    this.fill = const Color(0x24FFFFFF),
+    this.highlight = const Color(0x73FFFFFF),
+    this.blurSigma = 30,
     this.shadow,
   });
 
@@ -46,6 +46,9 @@ class ChukGlass extends StatelessWidget {
       decoration: ShapeDecoration(shape: shape, shadows: shadow),
       child: ClipPath(
         clipper: ShapeBorderClipper(shape: shape),
+        // A save layer is required so the backdrop blur is bounded to this
+        // shape instead of bleeding to the full screen width.
+        clipBehavior: Clip.antiAliasWithSaveLayer,
         child: BackdropFilter(
           filter: ui.ImageFilter.blur(sigmaX: blurSigma, sigmaY: blurSigma),
           child: DecoratedBox(

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart' show Icons;
 import 'package:flutter/services.dart' show Clipboard, ClipboardData;
 import 'package:flutter/widgets.dart';
 
+import 'gallery.dart';
+
 void main() => runApp(const ExampleApp());
 
 /// A Material-free host app that shows the chuk_ui components doing real work:
@@ -105,16 +107,12 @@ class _ExampleAppState extends State<ExampleApp> {
             return DecoratedBox(
               decoration: BoxDecoration(
                 color: t.colors.surfaceBase,
-                // A soft gradient in light mode so the frosted glass reads.
-                gradient: t.isLight
-                    ? const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Color(0xFFDCE7F5),
-                          Color(0xFFEDE7F3),
-                          Color(0xFFE3F0EA),
-                        ],
+                // Temporary hardcoded backdrop in light mode so the frosted
+                // glass has real content to blur (no gradients).
+                image: t.isLight
+                    ? const DecorationImage(
+                        image: AssetImage('assets/bg.jpg'),
+                        fit: BoxFit.cover,
                       )
                     : null,
               ),
@@ -129,6 +127,7 @@ class _ExampleAppState extends State<ExampleApp> {
                           _todayTab(t),
                           _trendsTab(t),
                           _colorsTab(t),
+                          _galleryTab(t),
                           _settingsTab(t),
                         ],
                       ),
@@ -154,6 +153,11 @@ class _ExampleAppState extends State<ExampleApp> {
                         label: 'Colors',
                       ),
                       ChukNavItem(
+                        icon: Icons.widgets_outlined,
+                        activeIcon: Icons.widgets_rounded,
+                        label: 'Gallery',
+                      ),
+                      ChukNavItem(
                         icon: Icons.settings_outlined,
                         activeIcon: Icons.settings_rounded,
                         label: 'Settings',
@@ -171,7 +175,13 @@ class _ExampleAppState extends State<ExampleApp> {
 
   Widget _page(ChukThemeData t, String title, List<Widget> children) {
     return SingleChildScrollView(
-      padding: EdgeInsets.all(t.spacing.xl),
+      // Extra bottom padding so content clears the floating nav bar.
+      padding: EdgeInsets.fromLTRB(
+        t.spacing.xl,
+        t.spacing.xl,
+        t.spacing.xl,
+        t.spacing.xl + 96,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -305,6 +315,19 @@ class _ExampleAppState extends State<ExampleApp> {
               ),
             ],
           )),
+    ]);
+  }
+
+  // ── Gallery ────────────────────────────────────────────────────────────
+  Widget _galleryTab(ChukThemeData t) {
+    return _page(t, 'Gallery', [
+      for (final (title, demo) in galleryEntries()) ...[
+        Text(title,
+            style: t.typography.caption.copyWith(color: t.colors.textSecondary)),
+        SizedBox(height: t.spacing.sm),
+        _card(t, child: demo),
+        SizedBox(height: t.spacing.md),
+      ],
     ]);
   }
 
