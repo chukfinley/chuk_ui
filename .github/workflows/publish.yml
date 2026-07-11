@@ -1,0 +1,21 @@
+# Tag-triggered publish to pub.dev — for LATER, when the API is stable.
+#
+# This is intentionally gated on the `pubdev-v*` tag pattern so normal release
+# tags (`vX.Y.Z`, used for Git-dependency consumers today) do NOT trigger it.
+#
+# Before the first automated publish:
+#   1. Publish the first version manually once: `dart pub publish`.
+#   2. On pub.dev → package → Admin → enable Automated publishing, set the
+#      repository and tag pattern to `pubdev-v{{version}}`.
+#   3. Then pushing a tag like `pubdev-v1.0.0` publishes automatically via OIDC.
+on:
+  push:
+    tags: ['pubdev-v[0-9]+.[0-9]+.[0-9]+']
+
+jobs:
+  publish:
+    permissions:
+      id-token: write # required for OIDC authentication with pub.dev
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
+    with:
+      environment: pub.dev
