@@ -201,11 +201,15 @@ class ChukThemeData {
       ),
       navStyle: (navStyle ?? const ChukNavStyle()).merge(
         ChukNavStyle(
-          trackColor: colors.surfaceRaised.withValues(alpha: 0.93),
+          // Translucent chrome fill (like the reference `_barFill`) so the
+          // scenic background genuinely shows through the floating pill.
+          trackColor: colors.fillRaised,
+          // Stronger highlight + more legible inactive tabs so every
+          // destination reads, not just the selected one.
           highlightColor:
-              isLight ? const Color(0x0F000000) : const Color(0x24FFFFFF),
+              isLight ? const Color(0x1F000000) : const Color(0x33FFFFFF),
           activeColor: colors.textPrimary,
-          inactiveColor: colors.textTertiary,
+          inactiveColor: colors.textSecondary,
           height: 64,
           collapsedHeight: 52,
           radius: radii.pill,

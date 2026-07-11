@@ -92,10 +92,14 @@ next, because those designs already exist and are approved.
 - [ ] Grid
 - [ ] Safe-area aware page wrapper
 
-## Shape
+## Shape & glass
 
 - [x] Apple continuous-corner smoothing (`SquircleBorder`, `ClipSquircle`,
   `ClipAppIcon`) — used by buttons and cards
+- [~] Frosted glass (`ChukGlass`) + light-mode chrome translucency
+  (`surfaceOpacity` / `fillRaised`) — **experimental**, dark mode is the focus
+- [ ] Real shader-based "liquid glass" (experimental) — ref:
+  github.com/sdegenaar/liquid_glass_widgets (`flutter_shaders`, GLSL refraction)
 
 ## Cross-cutting quality
 

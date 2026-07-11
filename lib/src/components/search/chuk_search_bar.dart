@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+import '../../shape/chuk_glass.dart';
 import '../../shape/chuk_squircle.dart';
 import '../../theme/chuk_theme.dart';
 
@@ -102,18 +103,18 @@ class _ChukSearchBarState extends State<ChukSearchBar> {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: widget.enabled ? _focus.requestFocus : null,
-      child: DecoratedBox(
-        decoration: ShapeDecoration(
-          color: t.colors.surfaceRaised.withValues(alpha: 0.93),
-          shape: shape,
-          shadows: const [
-            BoxShadow(
-              color: Color(0x57000000),
-              blurRadius: 28,
-              offset: Offset(0, 10),
-            ),
-          ],
-        ),
+      child: ChukGlass(
+        shape: shape,
+        fill: t.colors.fillRaised,
+        highlight: Color.fromRGBO(255, 255, 255, t.isLight ? 0.50 : 0.10),
+        blurSigma: 32,
+        shadow: const [
+          BoxShadow(
+            color: Color(0x40000000),
+            blurRadius: 28,
+            offset: Offset(0, 10),
+          ),
+        ],
         child: SizedBox(
           height: widget.height,
           child: Padding(

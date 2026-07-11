@@ -30,6 +30,7 @@ class ChukColors {
     required this.statusWarning,
     required this.statusCritical,
     required this.onStatus,
+    required this.surfaceOpacity,
   });
 
   /// The full-screen background canvas.
@@ -86,6 +87,31 @@ class ChukColors {
   /// Content color that sits on top of a filled status color.
   final Color onStatus;
 
+  /// How see-through *chrome* surfaces are — the single translucency knob.
+  ///
+  /// Every floating surface (the nav bar pill, cards, tiles, sheets) fills with
+  /// [chrome] / [fillRaised] rather than a raw opaque `surface*` token, so the
+  /// scenic background genuinely shows through. `1.0` is fully opaque; lower
+  /// lets more of the background bleed in. Mirrors the reference app's global
+  /// `surfaceOpacity` (0.58 dark / 0.74 light). Page/background canvases stay
+  /// opaque and keep using the raw `surface*` tokens.
+  final double surfaceOpacity;
+
+  /// Makes a solid surface [base] translucent by the global [surfaceOpacity]
+  /// (or an explicit [opacity]). Route every floating chrome fill through this.
+  Color chrome(Color base, {double? opacity}) =>
+      base.withValues(alpha: opacity ?? surfaceOpacity);
+
+  /// The translucent variant of [surfaceRaised] — the fill floating chrome
+  /// (nav bar, cards, tiles) should use instead of the raw opaque token.
+  Color get fillRaised => chrome(surfaceRaised);
+
+  /// The translucent variant of [surfaceOverlay] (menus, popovers).
+  Color get fillOverlay => chrome(surfaceOverlay);
+
+  /// The translucent variant of [surfaceInset] (wells, recessed fills).
+  Color get fillInset => chrome(surfaceInset);
+
   /// The reference dark palette (blue-grey canvas, blue accent). Default.
   factory ChukColors.dark() => const ChukColors(
         surfaceBase: Color(0xFF121518),
@@ -106,6 +132,7 @@ class ChukColors {
         statusWarning: Color(0xFFF0A020),
         statusCritical: Color(0xFFE0662F),
         onStatus: Color(0xFFFFFFFF),
+        surfaceOpacity: 0.58,
       );
 
   /// The reference light palette — a soft **sage-tinted** light scheme (not
@@ -129,6 +156,9 @@ class ChukColors {
         statusWarning: Color(0xFFC98A24),
         statusCritical: Color(0xFFC24E2E),
         onStatus: Color(0xFFFFFFFF),
+        // Strongly see-through in light mode so chrome reads as coloured glass
+        // over the background — the image shows through, not a white film.
+        surfaceOpacity: 0.30,
       );
 
   /// Returns a copy of this palette with the given fields replaced.
@@ -151,6 +181,7 @@ class ChukColors {
     Color? statusWarning,
     Color? statusCritical,
     Color? onStatus,
+    double? surfaceOpacity,
   }) {
     return ChukColors(
       surfaceBase: surfaceBase ?? this.surfaceBase,
@@ -171,6 +202,7 @@ class ChukColors {
       statusWarning: statusWarning ?? this.statusWarning,
       statusCritical: statusCritical ?? this.statusCritical,
       onStatus: onStatus ?? this.onStatus,
+      surfaceOpacity: surfaceOpacity ?? this.surfaceOpacity,
     );
   }
 
@@ -195,6 +227,8 @@ class ChukColors {
       statusWarning: Color.lerp(a.statusWarning, b.statusWarning, t)!,
       statusCritical: Color.lerp(a.statusCritical, b.statusCritical, t)!,
       onStatus: Color.lerp(a.onStatus, b.onStatus, t)!,
+      surfaceOpacity:
+          lerpDouble(a.surfaceOpacity, b.surfaceOpacity, t) ?? a.surfaceOpacity,
     );
   }
 
@@ -218,7 +252,8 @@ class ChukColors {
       other.statusPositive == statusPositive &&
       other.statusWarning == statusWarning &&
       other.statusCritical == statusCritical &&
-      other.onStatus == onStatus;
+      other.onStatus == onStatus &&
+      other.surfaceOpacity == surfaceOpacity;
 
   @override
   int get hashCode => Object.hashAll([
@@ -240,5 +275,6 @@ class ChukColors {
         statusWarning,
         statusCritical,
         onStatus,
+        surfaceOpacity,
       ]);
 }

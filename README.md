@@ -5,8 +5,13 @@ design system — your colors, your spacing, your motion — without inheriting 
 Material look. Components work inside a `MaterialApp`, a `WidgetsApp`, or fully
 standalone.
 
-> Status: **0.1.0**, early. API may move before 1.0. Consumed via Git dependency
-> (see below) until it stabilises on pub.dev.
+> Status: early. API may move before 1.0. Consumed via Git dependency (see
+> below) until it stabilises on pub.dev.
+>
+> **Dark mode is the supported focus.** The **light mode + frosted glass**
+> (`ChukGlass`, `surfaceOpacity`, the light palette) is **experimental** and may
+> change or be replaced by a shader-based "liquid glass" treatment. Build against
+> dark for now.
 
 ## Install (Git dependency)
 

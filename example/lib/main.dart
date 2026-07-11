@@ -116,9 +116,14 @@ class _ExampleAppState extends State<ExampleApp> {
                       )
                     : null,
               ),
-              child: Column(
+              // The body fills the whole screen and the floating nav bar is
+              // overlaid at the bottom (like the reference's `extendBody: true`
+              // + `bottomNavigationBar`), so scrolling content passes *behind*
+              // the translucent pill and shows through it and the side/bottom
+              // gaps. Pages pad their bottom (see [_page]) to clear the bar.
+              child: Stack(
                 children: [
-                  Expanded(
+                  Positioned.fill(
                     child: SafeArea(
                       bottom: false,
                       child: IndexedStack(
@@ -133,10 +138,14 @@ class _ExampleAppState extends State<ExampleApp> {
                       ),
                     ),
                   ),
-                  ChukNavBar(
-                    index: _tab,
-                    onChanged: (i) => setState(() => _tab = i),
-                    items: const [
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: ChukNavBar(
+                      index: _tab,
+                      onChanged: (i) => setState(() => _tab = i),
+                      items: const [
                       ChukNavItem(
                         icon: Icons.today_outlined,
                         activeIcon: Icons.today_rounded,
@@ -162,7 +171,8 @@ class _ExampleAppState extends State<ExampleApp> {
                         activeIcon: Icons.settings_rounded,
                         label: 'Settings',
                       ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),

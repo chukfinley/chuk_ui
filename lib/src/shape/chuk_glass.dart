@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/widgets.dart';
+import 'package:meta/meta.dart';
 
 /// A frosted-glass surface: whatever is behind it is blurred, then a translucent
 /// fill, a bright edge highlight and an optional shadow are laid on top, all
@@ -9,6 +10,11 @@ import 'package:flutter/widgets.dart';
 /// The blur only shows against content behind it, so place glass over a gradient
 /// or scenic background for the full effect. A low [fill] alpha plus a strong
 /// [blurSigma] and the [highlight] edge are what make the glass read clearly.
+///
+/// **Experimental.** The frosted-glass / light-mode look is still being explored
+/// (a real shader-based "liquid glass" treatment is a candidate). The supported,
+/// stable path is the **dark** theme; this API may change or be replaced.
+@experimental
 class ChukGlass extends StatelessWidget {
   const ChukGlass({
     super.key,

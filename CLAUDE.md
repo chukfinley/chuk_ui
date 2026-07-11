@@ -4,6 +4,16 @@ A standalone, token-driven Flutter component library published as a **Git
 dependency** (later pub.dev). These rules keep it consistent and keep the path
 to pub.dev open. Follow them for every new component.
 
+## Focus & experimental status
+
+**Dark mode is the supported, primary theme — focus all polish there.** The
+**light mode + frosted glass** (`ChukGlass`, `ChukColors.surfaceOpacity` /
+`fillRaised`, the sage light palette, the example's image backdrop) is
+**EXPERIMENTAL** (marked `@experimental`) and may change or be replaced by a
+real shader-based "liquid glass" (see `flutter_shaders`; reference:
+github.com/sdegenaar/liquid_glass_widgets). Do not treat the glass look as
+stable. Nav/card/search use `ChukGlass` only as the current experimental take.
+
 ## Non-negotiables
 
 1. **No Material.** Import `package:flutter/widgets.dart`, never
