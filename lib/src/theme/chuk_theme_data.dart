@@ -168,7 +168,9 @@ class ChukThemeData {
         ChukSwitchStyle(
           trackColor: colors.surfaceRaised.withValues(alpha: 0.9),
           borderColor: colors.hairlineStrong.withValues(alpha: 0.5),
-          knobOnColor: colors.accent.withValues(alpha: 0.60),
+          // Full accent so the "on" knob matches the primary button exactly
+          // (the old 0.60 alpha made it look washed-out / dark).
+          knobOnColor: colors.accent,
           knobOffColor:
               isLight ? const Color(0x1A000000) : const Color(0x24FFFFFF),
           width: 58,

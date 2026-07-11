@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:chuk_ui/chuk_ui.dart';
 import 'package:flutter/material.dart' show Icons;
+import 'package:flutter/services.dart' show Clipboard, ClipboardData;
 import 'package:flutter/widgets.dart';
 
 void main() => runApp(const ExampleApp());
@@ -57,6 +58,7 @@ class _ExampleAppState extends State<ExampleApp> {
   bool _loading = false;
   bool _notifications = true;
   bool _sync = false;
+  bool _previewSwitch = true;
   String _lastAction = 'Noch nichts gedrückt';
 
   void _act(String msg) => setState(() => _lastAction = msg);
@@ -172,6 +174,11 @@ class _ExampleAppState extends State<ExampleApp> {
   // ── Today ──────────────────────────────────────────────────────────────
   Widget _todayTab(ChukThemeData t) {
     return _page(t, 'Today', [
+      ChukSearchBar(
+        hintText: 'Suchen …',
+        onChanged: (q) => _act('Suche: "$q"'),
+      ),
+      SizedBox(height: t.spacing.lg),
       _card(t,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -291,20 +298,76 @@ class _ExampleAppState extends State<ExampleApp> {
         style: t.typography.body.copyWith(color: t.colors.textSecondary),
       ),
       SizedBox(height: t.spacing.md),
+      ChukColorPicker(
+        color: _primary,
+        onChanged: (c) => setState(() => _primary = c),
+      ),
+      SizedBox(height: t.spacing.md),
+      // Hex + copy.
       Row(
         children: [
-          const ChukSpinner(size: 28),
-          SizedBox(width: t.spacing.md),
-          Expanded(
-            child: ChukButton.primary(
-              expand: true,
-              onPressed: () => _act('Aktuelle Primary getestet'),
-              child: const Text('Aktuelle Primary'),
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: _primary,
+              borderRadius: BorderRadius.circular(t.radii.sm),
             ),
+          ),
+          SizedBox(width: t.spacing.md),
+          Text(
+            _hex(_primary),
+            style: t.typography.title.copyWith(
+              fontFeatures: const [],
+              color: t.colors.textPrimary,
+            ),
+          ),
+          const Spacer(),
+          ChukButton.ghost(
+            onPressed: () {
+              Clipboard.setData(ClipboardData(text: _hex(_primary)));
+              _act('${_hex(_primary)} kopiert');
+            },
+            child: const Text('Copy'),
           ),
         ],
       ),
       SizedBox(height: t.spacing.lg),
+      // Live preview of components in the chosen color.
+      _card(t,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Live-Vorschau',
+                  style: t.typography.caption
+                      .copyWith(color: t.colors.textSecondary)),
+              SizedBox(height: t.spacing.md),
+              Wrap(
+                spacing: t.spacing.sm,
+                runSpacing: t.spacing.sm,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  ChukButton.primary(
+                    onPressed: () => _act('Primary'),
+                    child: const Text('Primary'),
+                  ),
+                  ChukButton.ghost(
+                    onPressed: () => _act('Ghost'),
+                    child: const Text('Ghost'),
+                  ),
+                  ChukSwitch(
+                    value: _previewSwitch,
+                    onChanged: (v) => setState(() => _previewSwitch = v),
+                  ),
+                  const ChukSpinner(size: 28),
+                ],
+              ),
+            ],
+          )),
+      SizedBox(height: t.spacing.sm),
+      Text('Presets',
+          style: t.typography.title.copyWith(color: t.colors.textSecondary)),
+      SizedBox(height: t.spacing.sm),
       Wrap(
         spacing: t.spacing.sm,
         runSpacing: t.spacing.sm,

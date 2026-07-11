@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.0
+
+- **`ChukSearchBar`** (new): floating search bar styled like `ChukNavBar`
+  (translucent raised fill, squircle pill, lift shadow). Material-free input
+  via `EditableText`, with a drawn search glyph — no icon font needed.
+- **`ChukColorPicker`** (new): draggable HSV picker — a saturation/value field
+  you swipe plus a hue slider, reporting the live color.
+- **`ChukCard`** (new): squircle surface container matching the buttons.
+- Example: Colors tab now has the picker, a hex readout with copy-to-clipboard,
+  and a live component preview (button / ghost / switch / spinner) in the
+  chosen color; the whole accent follows the picked color.
+
 ## 0.2.0
 
 Adopt the real reference design system (from `~/git/noop/flutter_app`).

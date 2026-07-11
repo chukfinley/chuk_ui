@@ -33,6 +33,8 @@ export 'src/components/spinner/chuk_spinner.dart';
 export 'src/components/nav/chuk_nav_bar.dart';
 export 'src/components/nav/chuk_nav_style.dart';
 export 'src/components/card/chuk_card.dart';
+export 'src/components/search/chuk_search_bar.dart';
+export 'src/components/color_picker/chuk_color_picker.dart';
 
 // Shape
 export 'src/shape/chuk_squircle.dart';
