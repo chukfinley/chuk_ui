@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../../shape/chuk_squircle.dart';
 import '../../theme/chuk_theme.dart';
 import 'chuk_button_style.dart';
 
@@ -154,8 +155,8 @@ class _ChukButtonState extends State<ChukButton> {
         ? (s.background ?? const Color(0x00000000))
         : (s.disabledBackground ?? s.background ?? const Color(0x00000000));
     final foreground = _enabled
-        ? (s.foreground ?? t.colors.onSurface)
-        : (s.disabledForeground ?? s.foreground ?? t.colors.onDisabled);
+        ? (s.foreground ?? t.colors.textPrimary)
+        : (s.disabledForeground ?? s.foreground ?? t.colors.textTertiary);
 
     // Blend the interaction overlay over the resting background.
     var fill = background;
@@ -167,8 +168,17 @@ class _ChukButtonState extends State<ChukButton> {
       }
     }
 
-    final radius = BorderRadius.circular(s.radius ?? t.radii.md);
     final showBorder = (s.borderWidth ?? 0) > 0 && s.borderColor != null;
+
+    // Apple-style continuously-curved corners. A large default radius reads as
+    // a smooth stadium/pill; smoothing softens the seam.
+    final shape = SquircleBorder(
+      radius: s.radius ?? t.radii.pill,
+      smoothing: s.smoothing ?? kAppleCornerSmoothing,
+      side: showBorder
+          ? BorderSide(color: s.borderColor!, width: s.borderWidth!)
+          : BorderSide.none,
+    );
 
     final Widget content = DefaultTextStyle.merge(
       style: (s.textStyle ?? t.typography.label).copyWith(color: foreground),
@@ -183,16 +193,13 @@ class _ChukButtonState extends State<ChukButton> {
       curve: t.motion.standard,
       constraints: BoxConstraints(minHeight: s.minHeight ?? 44),
       padding: s.padding ?? EdgeInsets.all(t.spacing.md),
-      decoration: BoxDecoration(
+      decoration: ShapeDecoration(
         color: fill,
-        borderRadius: radius,
-        border: showBorder
-            ? Border.all(color: s.borderColor!, width: s.borderWidth!)
-            : null,
-        boxShadow: _focused && _enabled
+        shape: shape,
+        shadows: _focused && _enabled
             ? [
                 BoxShadow(
-                  color: t.colors.focus.withValues(alpha: 0.5),
+                  color: t.colors.focusRing.withValues(alpha: 0.5),
                   blurRadius: 0,
                   spreadRadius: 3,
                 ),

@@ -27,3 +27,12 @@ export 'src/components/button/chuk_button.dart';
 export 'src/components/button/chuk_button_style.dart';
 export 'src/components/switch/chuk_switch.dart';
 export 'src/components/switch/chuk_switch_style.dart';
+export 'src/components/segmented/chuk_segmented.dart';
+export 'src/components/segmented/chuk_segmented_style.dart';
+export 'src/components/spinner/chuk_spinner.dart';
+export 'src/components/nav/chuk_nav_bar.dart';
+export 'src/components/nav/chuk_nav_style.dart';
+export 'src/components/card/chuk_card.dart';
+
+// Shape
+export 'src/shape/chuk_squircle.dart';

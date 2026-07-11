@@ -4,184 +4,240 @@ import 'package:flutter/foundation.dart';
 
 /// The semantic color palette for a [ChukThemeData].
 ///
-/// Colors are named by *role*, not by hue — a component asks for
-/// [primary] or [surface], never for "blue". Swap the values in
-/// [ChukColors.light] / [ChukColors.dark] (or your own factory) and every
-/// component follows automatically.
+/// The roles and default values mirror the reference design system: a
+/// blue-grey dark canvas with a blue accent, layered surfaces, and three text
+/// tiers. Components ask for a *role* ([accent], [surfaceRaised], …), never a
+/// hue — swap the values in [ChukColors.dark] / [ChukColors.light] to rebrand
+/// and every component follows.
 @immutable
 class ChukColors {
   const ChukColors({
-    required this.primary,
-    required this.onPrimary,
-    required this.secondary,
-    required this.onSecondary,
-    required this.surface,
-    required this.onSurface,
-    required this.surfaceMuted,
-    required this.border,
-    required this.danger,
-    required this.onDanger,
-    required this.disabled,
-    required this.onDisabled,
-    required this.focus,
+    required this.surfaceBase,
+    required this.surfaceRaised,
+    required this.surfaceOverlay,
+    required this.surfaceInset,
+    required this.hairline,
+    required this.hairlineStrong,
+    required this.textPrimary,
+    required this.textSecondary,
+    required this.textTertiary,
+    required this.accent,
+    required this.accentHover,
+    required this.accentMuted,
+    required this.onAccent,
+    required this.focusRing,
+    required this.statusPositive,
+    required this.statusWarning,
+    required this.statusCritical,
+    required this.onStatus,
   });
 
-  /// Primary brand color, used for the main call-to-action.
-  final Color primary;
+  /// The full-screen background canvas.
+  final Color surfaceBase;
 
-  /// Content color that sits on top of [primary].
-  final Color onPrimary;
+  /// Raised chrome (cards, tiles, sheets, filled secondary controls).
+  final Color surfaceRaised;
 
-  /// Secondary / less prominent accent.
-  final Color secondary;
+  /// Overlay surfaces (menus, popovers).
+  final Color surfaceOverlay;
 
-  /// Content color that sits on top of [secondary].
-  final Color onSecondary;
+  /// Inset / recessed surfaces (wells, disabled fills).
+  final Color surfaceInset;
 
-  /// Default background of surfaces (cards, sheets, app background).
-  final Color surface;
+  /// Hairline dividers and subtle borders.
+  final Color hairline;
 
-  /// Default content color on [surface].
-  final Color onSurface;
+  /// A stronger border for outlined controls.
+  final Color hairlineStrong;
 
-  /// A slightly offset surface for hover states and subtle fills.
-  final Color surfaceMuted;
+  /// Primary text and icons.
+  final Color textPrimary;
 
-  /// Hairline / outline color for borders and dividers.
-  final Color border;
+  /// Secondary text (labels, less important content).
+  final Color textSecondary;
 
-  /// Destructive / error accent.
-  final Color danger;
+  /// Tertiary text (hints, disabled text, captions).
+  final Color textTertiary;
 
-  /// Content color that sits on top of [danger].
-  final Color onDanger;
+  /// The brand accent, used for the primary call-to-action and selection.
+  final Color accent;
 
-  /// Fill color for disabled controls.
-  final Color disabled;
+  /// Hovered / brighter accent.
+  final Color accentHover;
 
-  /// Content color on top of [disabled].
-  final Color onDisabled;
+  /// A muted accent tint for backgrounds behind accent content.
+  final Color accentMuted;
+
+  /// Content color that sits on top of [accent].
+  final Color onAccent;
 
   /// Focus-ring color for keyboard focus.
-  final Color focus;
+  final Color focusRing;
 
-  /// A sensible light palette. Override any value with [copyWith].
-  factory ChukColors.light() => const ChukColors(
-        primary: Color(0xFF4F46E5),
-        onPrimary: Color(0xFFFFFFFF),
-        secondary: Color(0xFF64748B),
-        onSecondary: Color(0xFFFFFFFF),
-        surface: Color(0xFFFFFFFF),
-        onSurface: Color(0xFF0F172A),
-        surfaceMuted: Color(0xFFF1F5F9),
-        border: Color(0xFFE2E8F0),
-        danger: Color(0xFFDC2626),
-        onDanger: Color(0xFFFFFFFF),
-        disabled: Color(0xFFE2E8F0),
-        onDisabled: Color(0xFF94A3B8),
-        focus: Color(0xFF6366F1),
+  /// Positive / success accent.
+  final Color statusPositive;
+
+  /// Warning accent.
+  final Color statusWarning;
+
+  /// Critical / destructive accent.
+  final Color statusCritical;
+
+  /// Content color that sits on top of a filled status color.
+  final Color onStatus;
+
+  /// The reference dark palette (blue-grey canvas, blue accent). Default.
+  factory ChukColors.dark() => const ChukColors(
+        surfaceBase: Color(0xFF121518),
+        surfaceRaised: Color(0xFF25292C),
+        surfaceOverlay: Color(0xFF1C1F26),
+        surfaceInset: Color(0xFF1F2229),
+        hairline: Color(0xFF21304A),
+        hairlineStrong: Color(0xFF2E3C57),
+        textPrimary: Color(0xFFF4F6F8),
+        textSecondary: Color(0xFFC8CFD8),
+        textTertiary: Color(0xFF8A94A4),
+        accent: Color(0xFF60A0E0),
+        accentHover: Color(0xFF8FBEEC),
+        accentMuted: Color(0xFF16233A),
+        onAccent: Color(0xFFFFFFFF),
+        focusRing: Color(0xFF60A0E0),
+        statusPositive: Color(0xFF03E095),
+        statusWarning: Color(0xFFF0A020),
+        statusCritical: Color(0xFFE0662F),
+        onStatus: Color(0xFFFFFFFF),
       );
 
-  /// A sensible dark palette. Override any value with [copyWith].
-  factory ChukColors.dark() => const ChukColors(
-        primary: Color(0xFF818CF8),
-        onPrimary: Color(0xFF0F172A),
-        secondary: Color(0xFF94A3B8),
-        onSecondary: Color(0xFF0F172A),
-        surface: Color(0xFF0F172A),
-        onSurface: Color(0xFFF1F5F9),
-        surfaceMuted: Color(0xFF1E293B),
-        border: Color(0xFF334155),
-        danger: Color(0xFFF87171),
-        onDanger: Color(0xFF0F172A),
-        disabled: Color(0xFF334155),
-        onDisabled: Color(0xFF64748B),
-        focus: Color(0xFF818CF8),
+  /// The reference light palette (cool neutral canvas, darker blue accent).
+  factory ChukColors.light() => const ChukColors(
+        surfaceBase: Color(0xFFECEDEF),
+        surfaceRaised: Color(0xFFFFFFFF),
+        surfaceOverlay: Color(0xFFFFFFFF),
+        surfaceInset: Color(0xFFE0E2E6),
+        hairline: Color(0xFFDADCE0),
+        hairlineStrong: Color(0xFFC7CAD0),
+        textPrimary: Color(0xFF1A2230),
+        textSecondary: Color(0xFF4C5564),
+        textTertiary: Color(0xFF7C8696),
+        accent: Color(0xFF2F6FCB),
+        accentHover: Color(0xFF255CB0),
+        accentMuted: Color(0xFFE4ECF6),
+        onAccent: Color(0xFFFFFFFF),
+        focusRing: Color(0xFF2F6FCB),
+        statusPositive: Color(0xFF12A56E),
+        statusWarning: Color(0xFFD08A1C),
+        statusCritical: Color(0xFFC84E1E),
+        onStatus: Color(0xFFFFFFFF),
       );
 
   /// Returns a copy of this palette with the given fields replaced.
   ChukColors copyWith({
-    Color? primary,
-    Color? onPrimary,
-    Color? secondary,
-    Color? onSecondary,
-    Color? surface,
-    Color? onSurface,
-    Color? surfaceMuted,
-    Color? border,
-    Color? danger,
-    Color? onDanger,
-    Color? disabled,
-    Color? onDisabled,
-    Color? focus,
+    Color? surfaceBase,
+    Color? surfaceRaised,
+    Color? surfaceOverlay,
+    Color? surfaceInset,
+    Color? hairline,
+    Color? hairlineStrong,
+    Color? textPrimary,
+    Color? textSecondary,
+    Color? textTertiary,
+    Color? accent,
+    Color? accentHover,
+    Color? accentMuted,
+    Color? onAccent,
+    Color? focusRing,
+    Color? statusPositive,
+    Color? statusWarning,
+    Color? statusCritical,
+    Color? onStatus,
   }) {
     return ChukColors(
-      primary: primary ?? this.primary,
-      onPrimary: onPrimary ?? this.onPrimary,
-      secondary: secondary ?? this.secondary,
-      onSecondary: onSecondary ?? this.onSecondary,
-      surface: surface ?? this.surface,
-      onSurface: onSurface ?? this.onSurface,
-      surfaceMuted: surfaceMuted ?? this.surfaceMuted,
-      border: border ?? this.border,
-      danger: danger ?? this.danger,
-      onDanger: onDanger ?? this.onDanger,
-      disabled: disabled ?? this.disabled,
-      onDisabled: onDisabled ?? this.onDisabled,
-      focus: focus ?? this.focus,
+      surfaceBase: surfaceBase ?? this.surfaceBase,
+      surfaceRaised: surfaceRaised ?? this.surfaceRaised,
+      surfaceOverlay: surfaceOverlay ?? this.surfaceOverlay,
+      surfaceInset: surfaceInset ?? this.surfaceInset,
+      hairline: hairline ?? this.hairline,
+      hairlineStrong: hairlineStrong ?? this.hairlineStrong,
+      textPrimary: textPrimary ?? this.textPrimary,
+      textSecondary: textSecondary ?? this.textSecondary,
+      textTertiary: textTertiary ?? this.textTertiary,
+      accent: accent ?? this.accent,
+      accentHover: accentHover ?? this.accentHover,
+      accentMuted: accentMuted ?? this.accentMuted,
+      onAccent: onAccent ?? this.onAccent,
+      focusRing: focusRing ?? this.focusRing,
+      statusPositive: statusPositive ?? this.statusPositive,
+      statusWarning: statusWarning ?? this.statusWarning,
+      statusCritical: statusCritical ?? this.statusCritical,
+      onStatus: onStatus ?? this.onStatus,
     );
   }
 
   /// Linearly interpolates between two palettes for animated theme changes.
   static ChukColors lerp(ChukColors a, ChukColors b, double t) {
     return ChukColors(
-      primary: Color.lerp(a.primary, b.primary, t)!,
-      onPrimary: Color.lerp(a.onPrimary, b.onPrimary, t)!,
-      secondary: Color.lerp(a.secondary, b.secondary, t)!,
-      onSecondary: Color.lerp(a.onSecondary, b.onSecondary, t)!,
-      surface: Color.lerp(a.surface, b.surface, t)!,
-      onSurface: Color.lerp(a.onSurface, b.onSurface, t)!,
-      surfaceMuted: Color.lerp(a.surfaceMuted, b.surfaceMuted, t)!,
-      border: Color.lerp(a.border, b.border, t)!,
-      danger: Color.lerp(a.danger, b.danger, t)!,
-      onDanger: Color.lerp(a.onDanger, b.onDanger, t)!,
-      disabled: Color.lerp(a.disabled, b.disabled, t)!,
-      onDisabled: Color.lerp(a.onDisabled, b.onDisabled, t)!,
-      focus: Color.lerp(a.focus, b.focus, t)!,
+      surfaceBase: Color.lerp(a.surfaceBase, b.surfaceBase, t)!,
+      surfaceRaised: Color.lerp(a.surfaceRaised, b.surfaceRaised, t)!,
+      surfaceOverlay: Color.lerp(a.surfaceOverlay, b.surfaceOverlay, t)!,
+      surfaceInset: Color.lerp(a.surfaceInset, b.surfaceInset, t)!,
+      hairline: Color.lerp(a.hairline, b.hairline, t)!,
+      hairlineStrong: Color.lerp(a.hairlineStrong, b.hairlineStrong, t)!,
+      textPrimary: Color.lerp(a.textPrimary, b.textPrimary, t)!,
+      textSecondary: Color.lerp(a.textSecondary, b.textSecondary, t)!,
+      textTertiary: Color.lerp(a.textTertiary, b.textTertiary, t)!,
+      accent: Color.lerp(a.accent, b.accent, t)!,
+      accentHover: Color.lerp(a.accentHover, b.accentHover, t)!,
+      accentMuted: Color.lerp(a.accentMuted, b.accentMuted, t)!,
+      onAccent: Color.lerp(a.onAccent, b.onAccent, t)!,
+      focusRing: Color.lerp(a.focusRing, b.focusRing, t)!,
+      statusPositive: Color.lerp(a.statusPositive, b.statusPositive, t)!,
+      statusWarning: Color.lerp(a.statusWarning, b.statusWarning, t)!,
+      statusCritical: Color.lerp(a.statusCritical, b.statusCritical, t)!,
+      onStatus: Color.lerp(a.onStatus, b.onStatus, t)!,
     );
   }
 
   @override
   bool operator ==(Object other) =>
       other is ChukColors &&
-      other.primary == primary &&
-      other.onPrimary == onPrimary &&
-      other.secondary == secondary &&
-      other.onSecondary == onSecondary &&
-      other.surface == surface &&
-      other.onSurface == onSurface &&
-      other.surfaceMuted == surfaceMuted &&
-      other.border == border &&
-      other.danger == danger &&
-      other.onDanger == onDanger &&
-      other.disabled == disabled &&
-      other.onDisabled == onDisabled &&
-      other.focus == focus;
+      other.surfaceBase == surfaceBase &&
+      other.surfaceRaised == surfaceRaised &&
+      other.surfaceOverlay == surfaceOverlay &&
+      other.surfaceInset == surfaceInset &&
+      other.hairline == hairline &&
+      other.hairlineStrong == hairlineStrong &&
+      other.textPrimary == textPrimary &&
+      other.textSecondary == textSecondary &&
+      other.textTertiary == textTertiary &&
+      other.accent == accent &&
+      other.accentHover == accentHover &&
+      other.accentMuted == accentMuted &&
+      other.onAccent == onAccent &&
+      other.focusRing == focusRing &&
+      other.statusPositive == statusPositive &&
+      other.statusWarning == statusWarning &&
+      other.statusCritical == statusCritical &&
+      other.onStatus == onStatus;
 
   @override
-  int get hashCode => Object.hash(
-        primary,
-        onPrimary,
-        secondary,
-        onSecondary,
-        surface,
-        onSurface,
-        surfaceMuted,
-        border,
-        danger,
-        onDanger,
-        disabled,
-        onDisabled,
-        focus,
-      );
+  int get hashCode => Object.hashAll([
+        surfaceBase,
+        surfaceRaised,
+        surfaceOverlay,
+        surfaceInset,
+        hairline,
+        hairlineStrong,
+        textPrimary,
+        textSecondary,
+        textTertiary,
+        accent,
+        accentHover,
+        accentMuted,
+        onAccent,
+        focusRing,
+        statusPositive,
+        statusWarning,
+        statusCritical,
+        onStatus,
+      ]);
 }

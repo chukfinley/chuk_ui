@@ -3,8 +3,11 @@ import 'package:flutter/widgets.dart';
 import '../../theme/chuk_theme.dart';
 import 'chuk_switch_style.dart';
 
-/// An on/off toggle whose track and thumb animate between states, styled
-/// entirely from the [ChukThemeData]. No Material dependency.
+/// An on/off toggle: a translucent pill track with a **half-width knob** that
+/// glides between halves — grey when off, accent-tinted when on. Styled from
+/// the [ChukThemeData], no Material dependency.
+///
+/// Ported from the reference app's toggle (58×30, 340 ms easeOutCubic slide).
 ///
 /// ```dart
 /// ChukSwitch(
@@ -50,43 +53,41 @@ class ChukSwitch extends StatelessWidget {
     final t = context.chuk;
     final s = t.switchStyle.merge(style);
 
-    final trackWidth = s.trackWidth ?? 46;
-    final trackHeight = s.trackHeight ?? 28;
-    final thumbSize = s.thumbSize ?? 22;
+    final width = s.width ?? 58;
+    final height = s.height ?? 30;
     final pad = s.padding ?? 3;
-    final disabledOpacity = s.disabledOpacity ?? 0.4;
+    final radius = BorderRadius.circular(s.radius ?? t.radii.pill);
+    final disabledOpacity = s.disabledOpacity ?? 0.45;
 
-    final trackColor = value
-        ? (s.trackOnColor ?? t.colors.primary)
-        : (s.trackOffColor ?? t.colors.border);
+    final knobColor = value
+        ? (s.knobOnColor ?? t.colors.accent.withValues(alpha: 0.60))
+        : (s.knobOffColor ?? const Color(0x24FFFFFF));
 
-    Widget control = AnimatedContainer(
-      duration: t.motion.medium,
-      curve: t.motion.standard,
-      width: trackWidth,
-      height: trackHeight,
-      padding: EdgeInsets.all(pad),
+    Widget control = Container(
+      width: width,
+      height: height,
       decoration: BoxDecoration(
-        color: trackColor,
-        borderRadius: BorderRadius.circular(trackHeight / 2),
+        color: s.trackColor ?? t.colors.surfaceRaised,
+        borderRadius: radius,
+        border: s.borderColor != null
+            ? Border.all(color: s.borderColor!, width: 1)
+            : null,
+        boxShadow: s.shadow,
       ),
-      child: AnimatedAlign(
-        duration: t.motion.medium,
-        curve: t.motion.standard,
-        alignment: value ? Alignment.centerRight : Alignment.centerLeft,
-        child: Container(
-          width: thumbSize,
-          height: thumbSize,
-          decoration: BoxDecoration(
-            color: s.thumbColor ?? t.colors.surface,
-            shape: BoxShape.circle,
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x33000000),
-                blurRadius: 4,
-                offset: Offset(0, 1),
-              ),
-            ],
+      child: Padding(
+        padding: EdgeInsets.all(pad),
+        child: AnimatedAlign(
+          alignment: value ? const Alignment(1, 0) : const Alignment(-1, 0),
+          duration: t.motion.slow,
+          curve: t.motion.standard,
+          child: FractionallySizedBox(
+            widthFactor: 0.5,
+            heightFactor: 1,
+            child: AnimatedContainer(
+              duration: t.motion.slow,
+              curve: t.motion.standard,
+              decoration: BoxDecoration(color: knobColor, borderRadius: radius),
+            ),
           ),
         ),
       ),

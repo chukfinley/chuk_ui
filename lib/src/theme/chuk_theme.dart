@@ -49,7 +49,7 @@ class ChukTheme extends StatelessWidget {
     return _ChukInheritedTheme(
       data: data,
       child: DefaultTextStyle(
-        style: data.typography.body.copyWith(color: data.colors.onSurface),
+        style: data.typography.body.copyWith(color: data.colors.textPrimary),
         child: child,
       ),
     );

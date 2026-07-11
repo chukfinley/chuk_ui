@@ -29,11 +29,11 @@ next, because those designs already exist and are approved.
 - [ ] Checkbox
 - [ ] Radio / radio group
 - [ ] Slider
-- [ ] Segmented control  ← **next** (Tag/Woche/Monat animation from noop)
+- [x] Segmented control (`ChukSegmented`, gliding highlight)
 - [ ] Chip / tag (selectable, removable)
 - [ ] Badge / counter
 - [ ] Avatar
-- [ ] Spinner / progress indicator (circular + linear)
+- [x] Spinner / loading indicator (`ChukSpinner`, morph-blob — the default)
 - [ ] Skeleton / shimmer loader
 - [ ] Divider
 - [ ] Tooltip
@@ -52,7 +52,7 @@ next, because those designs already exist and are approved.
 
 ## Molecules — surfaces & grouping
 
-- [ ] Card
+- [x] Card (`ChukCard`, squircle surface)
 - [ ] List tile / row (settings-style row)  ← **next** (from noop settings)
 - [ ] List section (grouped, with header)
 - [ ] Accordion / expansion panel
@@ -63,7 +63,7 @@ next, because those designs already exist and are approved.
 
 ## Organisms — navigation
 
-- [ ] Bottom navigation bar  ← **next** (from noop app shell)
+- [x] Bottom navigation bar (`ChukNavBar`, gliding highlight)
 - [ ] Navigation rail (desktop/tablet)
 - [ ] App bar / top bar
 - [ ] Drawer / side sheet
@@ -91,6 +91,11 @@ next, because those designs already exist and are approved.
 - [ ] Stack / spacing helpers (`ChukGap`)
 - [ ] Grid
 - [ ] Safe-area aware page wrapper
+
+## Shape
+
+- [x] Apple continuous-corner smoothing (`SquircleBorder`, `ClipSquircle`,
+  `ClipAppIcon`) — used by buttons and cards
 
 ## Cross-cutting quality
 

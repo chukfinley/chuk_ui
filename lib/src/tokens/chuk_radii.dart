@@ -5,22 +5,22 @@ import 'package:flutter/foundation.dart';
 @immutable
 class ChukRadii {
   const ChukRadii({
-    this.sm = 6,
-    this.md = 10,
-    this.lg = 16,
-    this.pill = 999,
+    this.sm = 10,
+    this.md = 14,
+    this.lg = 20,
+    this.pill = 50,
   });
 
-  /// Small radius — 6 by default.
+  /// Small radius — 10 by default (chips, small controls).
   final double sm;
 
-  /// Medium radius — 10 by default.
+  /// Medium / card radius — 14 by default.
   final double md;
 
-  /// Large radius — 16 by default.
+  /// Large radius — 20 by default (list groups, section cards).
   final double lg;
 
-  /// Fully rounded (pill / circle) — 999 by default.
+  /// Fully rounded (pill / toggle / nav bar) — 50 by default.
   final double pill;
 
   /// Returns a copy with the given steps replaced.

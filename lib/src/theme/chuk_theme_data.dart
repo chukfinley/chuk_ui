@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 
 import '../components/button/chuk_button_style.dart';
+import '../components/nav/chuk_nav_style.dart';
+import '../components/segmented/chuk_segmented_style.dart';
 import '../components/switch/chuk_switch_style.dart';
 import '../tokens/chuk_colors.dart';
 import '../tokens/chuk_motion.dart';
@@ -13,11 +15,12 @@ import '../tokens/chuk_typography.dart';
 /// every component.
 ///
 /// This is the single source of truth. To rebrand the whole library you change
-/// the tokens passed to [ChukThemeData.light] / [ChukThemeData.dark] (or build
-/// your own) — no component code changes.
+/// the tokens passed to [ChukThemeData.dark] / [ChukThemeData.light] (or build
+/// your own with [ChukThemeData.fromTokens]) — no component code changes.
 @immutable
 class ChukThemeData {
   const ChukThemeData({
+    required this.isLight,
     required this.colors,
     required this.spacing,
     required this.radii,
@@ -28,7 +31,13 @@ class ChukThemeData {
     required this.ghostButton,
     required this.dangerButton,
     required this.switchStyle,
+    required this.segmentedStyle,
+    required this.navStyle,
   });
+
+  /// Whether this is a light theme. Controls the sign of translucent overlays
+  /// (dark uses white tints, light uses black tints).
+  final bool isLight;
 
   /// Semantic color palette.
   final ChukColors colors;
@@ -51,7 +60,7 @@ class ChukThemeData {
   /// Default style for the secondary button variant.
   final ChukButtonStyle secondaryButton;
 
-  /// Default style for the ghost (transparent) button variant.
+  /// Default style for the ghost (outlined) button variant.
   final ChukButtonStyle ghostButton;
 
   /// Default style for the danger button variant.
@@ -60,14 +69,17 @@ class ChukThemeData {
   /// Default style for the switch.
   final ChukSwitchStyle switchStyle;
 
+  /// Default style for the segmented control.
+  final ChukSegmentedStyle segmentedStyle;
+
+  /// Default style for the bottom navigation bar.
+  final ChukNavStyle navStyle;
+
   /// Builds a full theme from a set of tokens, deriving every component's
-  /// default style from those tokens.
-  ///
-  /// This is where tokens turn into component styling. If you want to change
-  /// *how* a variant looks (not just the palette), override the relevant
-  /// `*Button` argument.
+  /// default style. This is the single place where a token becomes a look.
   factory ChukThemeData.fromTokens({
     required ChukColors colors,
+    required bool isLight,
     ChukSpacing spacing = const ChukSpacing(),
     ChukRadii radii = const ChukRadii(),
     ChukTypography? typography,
@@ -77,12 +89,20 @@ class ChukThemeData {
     ChukButtonStyle? ghostButton,
     ChukButtonStyle? dangerButton,
     ChukSwitchStyle? switchStyle,
+    ChukSegmentedStyle? segmentedStyle,
+    ChukNavStyle? navStyle,
   }) {
     final type = typography ?? ChukTypography.standard();
     final buttonPadding = EdgeInsets.symmetric(
       horizontal: spacing.lg,
       vertical: spacing.sm,
     );
+
+    // Translucent overlays: white tints on dark, black tints on light.
+    final pressedOverlay =
+        isLight ? const Color(0x14000000) : const Color(0x1FFFFFFF);
+    final hoverOverlay =
+        isLight ? const Color(0x0A000000) : const Color(0x14FFFFFF);
 
     ChukButtonStyle base() => ChukButtonStyle(
           radius: radii.md,
@@ -93,6 +113,7 @@ class ChukThemeData {
         );
 
     return ChukThemeData(
+      isLight: isLight,
       colors: colors,
       spacing: spacing,
       radii: radii,
@@ -101,73 +122,116 @@ class ChukThemeData {
       primaryButton: base().merge(
         primaryButton ??
             ChukButtonStyle(
-              background: colors.primary,
-              foreground: colors.onPrimary,
-              pressedOverlay: const Color(0x22000000),
-              hoverOverlay: const Color(0x14FFFFFF),
-              disabledBackground: colors.disabled,
-              disabledForeground: colors.onDisabled,
+              background: colors.accent,
+              foreground: colors.onAccent,
+              pressedOverlay: pressedOverlay,
+              hoverOverlay: hoverOverlay,
+              disabledBackground: colors.surfaceInset,
+              disabledForeground: colors.textTertiary,
             ),
       ),
       secondaryButton: base().merge(
         secondaryButton ??
             ChukButtonStyle(
-              background: colors.surfaceMuted,
-              foreground: colors.onSurface,
-              pressedOverlay: const Color(0x14000000),
-              hoverOverlay: const Color(0x0A000000),
-              disabledBackground: colors.disabled,
-              disabledForeground: colors.onDisabled,
+              background: colors.surfaceRaised,
+              foreground: colors.textPrimary,
+              pressedOverlay: pressedOverlay,
+              hoverOverlay: hoverOverlay,
+              disabledBackground: colors.surfaceInset,
+              disabledForeground: colors.textTertiary,
             ),
       ),
       ghostButton: base().merge(
         ghostButton ??
             ChukButtonStyle(
               background: const Color(0x00000000),
-              foreground: colors.primary,
-              borderColor: colors.border,
+              foreground: colors.accent,
+              borderColor: colors.hairlineStrong,
               borderWidth: 1,
-              pressedOverlay: const Color(0x14000000),
-              hoverOverlay: const Color(0x0A000000),
-              disabledForeground: colors.onDisabled,
+              pressedOverlay: pressedOverlay,
+              hoverOverlay: hoverOverlay,
+              disabledForeground: colors.textTertiary,
             ),
       ),
       dangerButton: base().merge(
         dangerButton ??
             ChukButtonStyle(
-              background: colors.danger,
-              foreground: colors.onDanger,
-              pressedOverlay: const Color(0x22000000),
-              hoverOverlay: const Color(0x14FFFFFF),
-              disabledBackground: colors.disabled,
-              disabledForeground: colors.onDisabled,
+              background: colors.statusCritical,
+              foreground: colors.onStatus,
+              pressedOverlay: pressedOverlay,
+              hoverOverlay: hoverOverlay,
+              disabledBackground: colors.surfaceInset,
+              disabledForeground: colors.textTertiary,
             ),
       ),
       switchStyle: (switchStyle ?? const ChukSwitchStyle()).merge(
         ChukSwitchStyle(
-          trackOnColor: colors.primary,
-          trackOffColor: colors.border,
-          thumbColor: colors.surface,
-          trackWidth: 46,
-          trackHeight: 28,
-          thumbSize: 22,
+          trackColor: colors.surfaceRaised.withValues(alpha: 0.9),
+          borderColor: colors.hairlineStrong.withValues(alpha: 0.5),
+          knobOnColor: colors.accent.withValues(alpha: 0.60),
+          knobOffColor:
+              isLight ? const Color(0x1A000000) : const Color(0x24FFFFFF),
+          width: 58,
+          height: 30,
           padding: 3,
-          disabledOpacity: 0.4,
+          radius: radii.pill,
+          disabledOpacity: 0.45,
+          shadow: const [
+            BoxShadow(
+              color: Color(0x57000000),
+              blurRadius: 14,
+              offset: Offset(0, 5),
+            ),
+          ],
+        ),
+      ),
+      segmentedStyle: (segmentedStyle ?? const ChukSegmentedStyle()).merge(
+        ChukSegmentedStyle(
+          trackColor: colors.surfaceInset,
+          highlightColor:
+              isLight ? const Color(0x0F000000) : const Color(0x24FFFFFF),
+          activeColor: colors.textPrimary,
+          inactiveColor: colors.textSecondary,
+          height: 32,
+          radius: radii.pill,
+          padding: 3,
+        ),
+      ),
+      navStyle: (navStyle ?? const ChukNavStyle()).merge(
+        ChukNavStyle(
+          trackColor: colors.surfaceRaised.withValues(alpha: 0.93),
+          highlightColor:
+              isLight ? const Color(0x0F000000) : const Color(0x24FFFFFF),
+          activeColor: colors.textPrimary,
+          inactiveColor: colors.textTertiary,
+          height: 64,
+          collapsedHeight: 52,
+          radius: radii.pill,
+          iconSize: 22,
+          shadow: [
+            BoxShadow(
+              color: Color(isLight ? 0x1A000000 : 0x57000000),
+              blurRadius: 28,
+              offset: const Offset(0, 10),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  /// The default light theme. Swap the tokens to rebrand.
-  factory ChukThemeData.light() =>
-      ChukThemeData.fromTokens(colors: ChukColors.light());
-
-  /// The default dark theme. Swap the tokens to rebrand.
+  /// The default dark theme (blue-grey canvas, blue accent). Swap tokens to
+  /// rebrand.
   factory ChukThemeData.dark() =>
-      ChukThemeData.fromTokens(colors: ChukColors.dark());
+      ChukThemeData.fromTokens(colors: ChukColors.dark(), isLight: false);
+
+  /// The default light theme. Swap tokens to rebrand.
+  factory ChukThemeData.light() =>
+      ChukThemeData.fromTokens(colors: ChukColors.light(), isLight: true);
 
   /// Returns a copy with the given fields replaced.
   ChukThemeData copyWith({
+    bool? isLight,
     ChukColors? colors,
     ChukSpacing? spacing,
     ChukRadii? radii,
@@ -178,8 +242,11 @@ class ChukThemeData {
     ChukButtonStyle? ghostButton,
     ChukButtonStyle? dangerButton,
     ChukSwitchStyle? switchStyle,
+    ChukSegmentedStyle? segmentedStyle,
+    ChukNavStyle? navStyle,
   }) {
     return ChukThemeData(
+      isLight: isLight ?? this.isLight,
       colors: colors ?? this.colors,
       spacing: spacing ?? this.spacing,
       radii: radii ?? this.radii,
@@ -190,6 +257,8 @@ class ChukThemeData {
       ghostButton: ghostButton ?? this.ghostButton,
       dangerButton: dangerButton ?? this.dangerButton,
       switchStyle: switchStyle ?? this.switchStyle,
+      segmentedStyle: segmentedStyle ?? this.segmentedStyle,
+      navStyle: navStyle ?? this.navStyle,
     );
   }
 
@@ -197,6 +266,7 @@ class ChukThemeData {
   /// switches (e.g. light ↔ dark).
   static ChukThemeData lerp(ChukThemeData a, ChukThemeData b, double t) {
     return ChukThemeData(
+      isLight: t < 0.5 ? a.isLight : b.isLight,
       colors: ChukColors.lerp(a.colors, b.colors, t),
       spacing: ChukSpacing.lerp(a.spacing, b.spacing, t),
       radii: ChukRadii.lerp(a.radii, b.radii, t),
@@ -209,12 +279,16 @@ class ChukThemeData {
       ghostButton: ChukButtonStyle.lerp(a.ghostButton, b.ghostButton, t),
       dangerButton: ChukButtonStyle.lerp(a.dangerButton, b.dangerButton, t),
       switchStyle: ChukSwitchStyle.lerp(a.switchStyle, b.switchStyle, t),
+      segmentedStyle:
+          ChukSegmentedStyle.lerp(a.segmentedStyle, b.segmentedStyle, t),
+      navStyle: ChukNavStyle.lerp(a.navStyle, b.navStyle, t),
     );
   }
 
   @override
   bool operator ==(Object other) =>
       other is ChukThemeData &&
+      other.isLight == isLight &&
       other.colors == colors &&
       other.spacing == spacing &&
       other.radii == radii &&
@@ -224,10 +298,13 @@ class ChukThemeData {
       other.secondaryButton == secondaryButton &&
       other.ghostButton == ghostButton &&
       other.dangerButton == dangerButton &&
-      other.switchStyle == switchStyle;
+      other.switchStyle == switchStyle &&
+      other.segmentedStyle == segmentedStyle &&
+      other.navStyle == navStyle;
 
   @override
   int get hashCode => Object.hash(
+        isLight,
         colors,
         spacing,
         radii,
@@ -238,5 +315,7 @@ class ChukThemeData {
         ghostButton,
         dangerButton,
         switchStyle,
+        segmentedStyle,
+        navStyle,
       );
 }

@@ -17,6 +17,7 @@ class ChukButtonStyle {
     this.borderColor,
     this.borderWidth,
     this.radius,
+    this.smoothing,
     this.padding,
     this.textStyle,
     this.minHeight,
@@ -40,6 +41,9 @@ class ChukButtonStyle {
 
   /// Corner radius in logical pixels.
   final double? radius;
+
+  /// Apple-style corner smoothing, 0..1 (0 = circular, 0.6 = iOS icon look).
+  final double? smoothing;
 
   /// Inner padding around the label.
   final EdgeInsets? padding;
@@ -69,6 +73,7 @@ class ChukButtonStyle {
     Color? borderColor,
     double? borderWidth,
     double? radius,
+    double? smoothing,
     EdgeInsets? padding,
     TextStyle? textStyle,
     double? minHeight,
@@ -83,6 +88,7 @@ class ChukButtonStyle {
       borderColor: borderColor ?? this.borderColor,
       borderWidth: borderWidth ?? this.borderWidth,
       radius: radius ?? this.radius,
+      smoothing: smoothing ?? this.smoothing,
       padding: padding ?? this.padding,
       textStyle: textStyle ?? this.textStyle,
       minHeight: minHeight ?? this.minHeight,
@@ -105,6 +111,7 @@ class ChukButtonStyle {
       borderColor: other.borderColor,
       borderWidth: other.borderWidth,
       radius: other.radius,
+      smoothing: other.smoothing,
       padding: other.padding,
       textStyle: other.textStyle,
       minHeight: other.minHeight,
@@ -123,6 +130,7 @@ class ChukButtonStyle {
       borderColor: Color.lerp(a.borderColor, b.borderColor, t),
       borderWidth: lerpDouble(a.borderWidth, b.borderWidth, t),
       radius: lerpDouble(a.radius, b.radius, t),
+      smoothing: lerpDouble(a.smoothing, b.smoothing, t),
       padding: EdgeInsets.lerp(a.padding, b.padding, t),
       textStyle: TextStyle.lerp(a.textStyle, b.textStyle, t),
       minHeight: lerpDouble(a.minHeight, b.minHeight, t),
@@ -143,6 +151,7 @@ class ChukButtonStyle {
       other.borderColor == borderColor &&
       other.borderWidth == borderWidth &&
       other.radius == radius &&
+      other.smoothing == smoothing &&
       other.padding == padding &&
       other.textStyle == textStyle &&
       other.minHeight == minHeight &&
@@ -158,6 +167,7 @@ class ChukButtonStyle {
         borderColor,
         borderWidth,
         radius,
+        smoothing,
         padding,
         textStyle,
         minHeight,
