@@ -1,7 +1,5 @@
 import 'package:flutter/widgets.dart';
 
-import '../../shape/chuk_glass.dart';
-import '../../shape/chuk_squircle.dart';
 import '../../theme/chuk_theme.dart';
 import 'chuk_nav_style.dart';
 
@@ -162,31 +160,23 @@ class ChukNavBar extends StatelessWidget {
     );
 
     final trackColor = s.trackColor ?? t.colors.surfaceRaised;
+    // A translucent solid pill (like the reference bar) — genuinely see-through
+    // over the background, with clean rounded corners. No backdrop blur.
+    final fill = t.isLight
+        ? trackColor.withValues(alpha: 0.62)
+        : trackColor.withValues(alpha: 0.86);
 
-    // Light mode = frosted glass; dark mode = solid raised pill.
-    Widget bar = t.isLight
-        ? ChukGlass(
-            shape: SquircleBorder(radius: s.radius ?? t.radii.pill),
-            fill: trackColor.withValues(alpha: 0.30),
-            blurSigma: 30,
-            shadow: s.shadow,
-            child: AnimatedSize(
-              duration: t.motion.medium,
-              curve: t.motion.standard,
-              child: SizedBox(height: height, child: inner),
-            ),
-          )
-        : AnimatedContainer(
-            duration: t.motion.medium,
-            curve: t.motion.standard,
-            height: height,
-            decoration: BoxDecoration(
-              color: trackColor,
-              borderRadius: radius,
-              boxShadow: s.shadow,
-            ),
-            child: inner,
-          );
+    Widget bar = AnimatedContainer(
+      duration: t.motion.medium,
+      curve: t.motion.standard,
+      height: height,
+      decoration: BoxDecoration(
+        color: fill,
+        borderRadius: radius,
+        boxShadow: s.shadow,
+      ),
+      child: inner,
+    );
 
     bar = Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 6),

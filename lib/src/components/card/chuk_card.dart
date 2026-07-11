@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 
-import '../../shape/chuk_glass.dart';
 import '../../shape/chuk_squircle.dart';
 import '../../theme/chuk_theme.dart';
 
@@ -70,29 +69,27 @@ class ChukCard extends StatelessWidget {
       child: child,
     );
 
-    // Light mode = frosted glass; dark mode = solid raised surface.
-    Widget card = t.isLight
-        ? ChukGlass(
-            shape: shape,
-            fill: (color ?? t.colors.surfaceRaised).withValues(alpha: 0.14),
-            shadow: shadow ??
-                const [
-                  BoxShadow(
-                    color: Color(0x1A000000),
-                    blurRadius: 20,
-                    offset: Offset(0, 8),
-                  ),
-                ],
-            child: content,
-          )
-        : DecoratedBox(
-            decoration: ShapeDecoration(
-              color: color ?? t.colors.surfaceRaised,
-              shape: shape,
-              shadows: shadow,
-            ),
-            child: content,
-          );
+    // A translucent solid surface — genuinely see-through in light mode (over
+    // the background), opaque in dark. Clean squircle corners, no backdrop blur.
+    final surface = color ?? t.colors.surfaceRaised;
+    final fill = t.isLight ? surface.withValues(alpha: 0.55) : surface;
+    Widget card = DecoratedBox(
+      decoration: ShapeDecoration(
+        color: fill,
+        shape: shape,
+        shadows: shadow ??
+            (t.isLight
+                ? const [
+                    BoxShadow(
+                      color: Color(0x14000000),
+                      blurRadius: 20,
+                      offset: Offset(0, 8),
+                    ),
+                  ]
+                : null),
+      ),
+      child: content,
+    );
 
     card = SizedBox(width: width ?? double.infinity, child: card);
 
