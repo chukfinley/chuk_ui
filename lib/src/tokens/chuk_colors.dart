@@ -108,25 +108,26 @@ class ChukColors {
         onStatus: Color(0xFFFFFFFF),
       );
 
-  /// The reference light palette (cool neutral canvas, darker blue accent).
+  /// The reference light palette — a soft **sage-tinted** light scheme (not
+  /// plain white), tuned to read as frosted glass over a gradient.
   factory ChukColors.light() => const ChukColors(
-        surfaceBase: Color(0xFFECEDEF),
-        surfaceRaised: Color(0xFFFFFFFF),
-        surfaceOverlay: Color(0xFFFFFFFF),
-        surfaceInset: Color(0xFFE0E2E6),
-        hairline: Color(0xFFDADCE0),
-        hairlineStrong: Color(0xFFC7CAD0),
-        textPrimary: Color(0xFF1A2230),
-        textSecondary: Color(0xFF4C5564),
-        textTertiary: Color(0xFF7C8696),
-        accent: Color(0xFF2F6FCB),
-        accentHover: Color(0xFF255CB0),
-        accentMuted: Color(0xFFE4ECF6),
+        surfaceBase: Color(0xFFDCE5DE),
+        surfaceRaised: Color(0xFFEDF2EE),
+        surfaceOverlay: Color(0xFFEDF2EE),
+        surfaceInset: Color(0xFFD0DBD3),
+        hairline: Color(0xFFC3CFC7),
+        hairlineStrong: Color(0xFFAFBCB3),
+        textPrimary: Color(0xFF1C241E),
+        textSecondary: Color(0xFF4B554E),
+        textTertiary: Color(0xFF7B857E),
+        accent: Color(0xFF4F7A5C),
+        accentHover: Color(0xFF3F6549),
+        accentMuted: Color(0xFFDBE8DE),
         onAccent: Color(0xFFFFFFFF),
-        focusRing: Color(0xFF2F6FCB),
-        statusPositive: Color(0xFF12A56E),
-        statusWarning: Color(0xFFD08A1C),
-        statusCritical: Color(0xFFC84E1E),
+        focusRing: Color(0xFF4F7A5C),
+        statusPositive: Color(0xFF2E9E6B),
+        statusWarning: Color(0xFFC98A24),
+        statusCritical: Color(0xFFC24E2E),
         onStatus: Color(0xFFFFFFFF),
       );
 

@@ -74,7 +74,7 @@ class ChukCard extends StatelessWidget {
     Widget card = t.isLight
         ? ChukGlass(
             shape: shape,
-            fill: (color ?? t.colors.surfaceRaised).withValues(alpha: 0.55),
+            fill: (color ?? t.colors.surfaceRaised).withValues(alpha: 0.42),
             shadow: shadow ??
                 const [
                   BoxShadow(

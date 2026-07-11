@@ -2,33 +2,38 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/widgets.dart';
 
-/// A frosted-glass surface: whatever is behind it is blurred, then a
-/// translucent fill (and optional border/shadow) is laid on top, all clipped to
-/// [shape].
+/// A frosted-glass surface: whatever is behind it is blurred, then a translucent
+/// fill, a bright edge highlight and an optional shadow are laid on top, all
+/// clipped to [shape].
 ///
-/// This is what gives light mode its glass look. The blur only shows against
-/// content behind it, so place glass over a gradient or scenic background for
-/// the full effect.
+/// The blur only shows against content behind it, so place glass over a gradient
+/// or scenic background for the full effect. A low [fill] alpha plus a strong
+/// [blurSigma] and the [highlight] edge are what make the glass read clearly.
 class ChukGlass extends StatelessWidget {
   const ChukGlass({
     super.key,
     required this.shape,
     required this.child,
-    this.fill = const Color(0x66FFFFFF),
-    this.blurSigma = 18,
+    this.fill = const Color(0x40FFFFFF),
+    this.highlight = const Color(0x66FFFFFF),
+    this.blurSigma = 26,
     this.shadow,
   });
 
   /// The clip + border shape (e.g. a `SquircleBorder`).
-  final ShapeBorder shape;
+  final OutlinedBorder shape;
 
   /// Content laid over the glass.
   final Widget child;
 
-  /// Translucent fill tint on top of the blur.
+  /// Translucent fill tint over the blur. Keep the alpha low (~0.3–0.45) so the
+  /// blurred backdrop stays visible.
   final Color fill;
 
-  /// Gaussian blur radius applied to the backdrop.
+  /// Bright hairline edge that gives the glass its rim of light.
+  final Color highlight;
+
+  /// Gaussian blur radius applied to the backdrop. Higher = frostier.
   final double blurSigma;
 
   /// Optional drop shadow (drawn unclipped, behind the glass).
@@ -44,8 +49,13 @@ class ChukGlass extends StatelessWidget {
         child: BackdropFilter(
           filter: ui.ImageFilter.blur(sigmaX: blurSigma, sigmaY: blurSigma),
           child: DecoratedBox(
-            // Fill + border on top of the blurred backdrop.
-            decoration: ShapeDecoration(color: fill, shape: shape),
+            // Translucent fill + a bright edge highlight on top of the blur.
+            decoration: ShapeDecoration(
+              color: fill,
+              shape: shape.copyWith(
+                side: BorderSide(color: highlight, width: 1),
+              ),
+            ),
             child: child,
           ),
         ),
