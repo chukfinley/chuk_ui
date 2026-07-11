@@ -1,13 +1,17 @@
+import 'dart:ui' show lerpDouble;
+
+import 'package:flutter/physics.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../theme/chuk_theme.dart';
 import 'chuk_switch_style.dart';
 
 /// An on/off toggle: a translucent pill track with a **half-width knob** that
-/// glides between halves — grey when off, accent-tinted when on. Styled from
+/// springs between halves — grey when off, accent-tinted when on. Styled from
 /// the [ChukThemeData], no Material dependency.
 ///
-/// Ported from the reference app's toggle (58×30, 340 ms easeOutCubic slide).
+/// The knob is driven by a real [SpringSimulation], so it snaps with a natural,
+/// slightly bouncy settle rather than a linear slide.
 ///
 /// ```dart
 /// ChukSwitch(
@@ -15,7 +19,7 @@ import 'chuk_switch_style.dart';
 ///   onChanged: (v) => setState(() => notifications = v),
 /// )
 /// ```
-class ChukSwitch extends StatelessWidget {
+class ChukSwitch extends StatefulWidget {
   const ChukSwitch({
     super.key,
     required this.value,
@@ -44,14 +48,45 @@ class ChukSwitch extends StatelessWidget {
   /// Accessibility label announced by screen readers.
   final String? semanticLabel;
 
-  bool get _enabled => onChanged != null;
+  @override
+  State<ChukSwitch> createState() => _ChukSwitchState();
+}
 
-  void _toggle() => onChanged?.call(!value);
+class _ChukSwitchState extends State<ChukSwitch>
+    with SingleTickerProviderStateMixin {
+  // Position of the knob: 0 = off (left), 1 = on (right). The spring can
+  // briefly overshoot outside [0, 1] for the bounce.
+  late final AnimationController _c = AnimationController.unbounded(
+    vsync: this,
+    value: widget.value ? 1 : 0,
+  );
+
+  // A snappy spring with a small overshoot.
+  static const _spring = SpringDescription(mass: 1, stiffness: 520, damping: 20);
+
+  bool get _enabled => widget.onChanged != null;
+
+  @override
+  void didUpdateWidget(ChukSwitch old) {
+    super.didUpdateWidget(old);
+    if (old.value != widget.value) {
+      final target = widget.value ? 1.0 : 0.0;
+      _c.animateWith(SpringSimulation(_spring, _c.value, target, _c.velocity));
+    }
+  }
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  void _toggle() => widget.onChanged?.call(!widget.value);
 
   @override
   Widget build(BuildContext context) {
     final t = context.chuk;
-    final s = t.switchStyle.merge(style);
+    final s = t.switchStyle.merge(widget.style);
 
     final width = s.width ?? 58;
     final height = s.height ?? 30;
@@ -59,9 +94,8 @@ class ChukSwitch extends StatelessWidget {
     final radius = BorderRadius.circular(s.radius ?? t.radii.pill);
     final disabledOpacity = s.disabledOpacity ?? 0.45;
 
-    final knobColor = value
-        ? (s.knobOnColor ?? t.colors.accent.withValues(alpha: 0.60))
-        : (s.knobOffColor ?? const Color(0x24FFFFFF));
+    final onColor = s.knobOnColor ?? t.colors.accent;
+    final offColor = s.knobOffColor ?? const Color(0x24FFFFFF);
 
     Widget control = Container(
       width: width,
@@ -74,20 +108,30 @@ class ChukSwitch extends StatelessWidget {
             : null,
         boxShadow: s.shadow,
       ),
-      child: Padding(
-        padding: EdgeInsets.all(pad),
-        child: AnimatedAlign(
-          alignment: value ? const Alignment(1, 0) : const Alignment(-1, 0),
-          duration: t.motion.slow,
-          curve: t.motion.standard,
-          child: FractionallySizedBox(
-            widthFactor: 0.5,
-            heightFactor: 1,
-            child: AnimatedContainer(
-              duration: t.motion.slow,
-              curve: t.motion.standard,
-              decoration: BoxDecoration(color: knobColor, borderRadius: radius),
-            ),
+      // Clip so the spring overshoot presses cleanly against the rounded end.
+      child: ClipRRect(
+        borderRadius: radius,
+        child: Padding(
+          padding: EdgeInsets.all(pad),
+          child: AnimatedBuilder(
+            animation: _c,
+            builder: (context, _) {
+              final pos = _c.value;
+              final clamped = pos.clamp(0.0, 1.0);
+              return Align(
+                alignment: Alignment(lerpDouble(-1, 1, pos)!, 0),
+                child: FractionallySizedBox(
+                  widthFactor: 0.5,
+                  heightFactor: 1,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: Color.lerp(offColor, onColor, clamped),
+                      borderRadius: radius,
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -98,13 +142,13 @@ class ChukSwitch extends StatelessWidget {
     }
 
     return Semantics(
-      toggled: value,
+      toggled: widget.value,
       enabled: _enabled,
-      label: semanticLabel,
+      label: widget.semanticLabel,
       child: FocusableActionDetector(
         enabled: _enabled,
-        focusNode: focusNode,
-        autofocus: autofocus,
+        focusNode: widget.focusNode,
+        autofocus: widget.autofocus,
         mouseCursor: _enabled
             ? SystemMouseCursors.click
             : SystemMouseCursors.basic,

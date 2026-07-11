@@ -22,10 +22,15 @@ class _ExampleAppState extends State<ExampleApp> {
   int _tab = 0;
 
   /// The live primary color, chosen from the palette tab.
-  Color _primary = const Color(0xFF03E095);
+  Color _primary = const Color(0xFF607C64);
 
-  /// 20 candidate main colors, judged as real buttons on the dark canvas.
+  /// Candidate main colors, judged as real buttons on the dark canvas.
+  /// The first three are the user's favourites (muted / understated).
   static const List<(String, Color)> _palette = [
+    ('Sage', Color(0xFF607C64)),
+    ('Olive', Color(0xFF7E7E52)),
+    ('Steel', Color(0xFF526F7E)),
+    ('Taupe', Color(0xFF49453F)),
     ('Mint', Color(0xFF03E095)),
     ('Emerald', Color(0xFF12B981)),
     ('Teal', Color(0xFF14B8A6)),
@@ -43,7 +48,7 @@ class _ExampleAppState extends State<ExampleApp> {
     ('Amber', Color(0xFFF0A85A)),
     ('Gold', Color(0xFFE6C34C)),
     ('Lime', Color(0xFFAFD65A)),
-    ('Sage', Color(0xFF86B58C)),
+    ('Moss', Color(0xFF86B58C)),
     ('Sand', Color(0xFFCBAA80)),
     ('Slate', Color(0xFF7C93AD)),
   ];

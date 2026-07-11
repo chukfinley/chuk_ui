@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.1
+
+- **`ChukSwitch`** now springs: the knob is driven by a `SpringSimulation`
+  (small overshoot, clipped cleanly) instead of a linear slide.
+- Example palette gains muted favourites (Sage, Olive, Steel, Taupe); Sage
+  `#607C64` is the default.
+
 ## 0.3.0
 
 - **`ChukSearchBar`** (new): floating search bar styled like `ChukNavBar`
