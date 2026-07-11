@@ -102,8 +102,22 @@ class _ExampleAppState extends State<ExampleApp> {
         child: Builder(
           builder: (context) {
             final t = context.chuk;
-            return Container(
-              color: t.colors.surfaceBase,
+            return DecoratedBox(
+              decoration: BoxDecoration(
+                color: t.colors.surfaceBase,
+                // A soft gradient in light mode so the frosted glass reads.
+                gradient: t.isLight
+                    ? const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color(0xFFDCE7F5),
+                          Color(0xFFEDE7F3),
+                          Color(0xFFE3F0EA),
+                        ],
+                      )
+                    : null,
+              ),
               child: Column(
                 children: [
                   Expanded(

@@ -38,3 +38,4 @@ export 'src/components/color_picker/chuk_color_picker.dart';
 
 // Shape
 export 'src/shape/chuk_squircle.dart';
+export 'src/shape/chuk_glass.dart';

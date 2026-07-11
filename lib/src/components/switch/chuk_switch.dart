@@ -61,8 +61,9 @@ class _ChukSwitchState extends State<ChukSwitch>
     value: widget.value ? 1 : 0,
   );
 
-  // A snappy spring with a small overshoot.
-  static const _spring = SpringDescription(mass: 1, stiffness: 520, damping: 20);
+  // A snappy, (near) critically-damped spring — quick settle, no overshoot
+  // past the track edge.
+  static const _spring = SpringDescription(mass: 1, stiffness: 520, damping: 30);
 
   bool get _enabled => widget.onChanged != null;
 
@@ -116,10 +117,10 @@ class _ChukSwitchState extends State<ChukSwitch>
           child: AnimatedBuilder(
             animation: _c,
             builder: (context, _) {
-              final pos = _c.value;
-              final clamped = pos.clamp(0.0, 1.0);
+              // Clamp the knob to the track so the spring never pokes out.
+              final clamped = _c.value.clamp(0.0, 1.0);
               return Align(
-                alignment: Alignment(lerpDouble(-1, 1, pos)!, 0),
+                alignment: Alignment(lerpDouble(-1, 1, clamped)!, 0),
                 child: FractionallySizedBox(
                   widthFactor: 0.5,
                   heightFactor: 1,
